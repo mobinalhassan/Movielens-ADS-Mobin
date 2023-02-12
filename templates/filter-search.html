@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movies Recommendation System</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--
+      - favicon
+    -->
+    <link rel="shortcut icon" href="../static/favicon.svg" type="image/svg+xml">
+
+    <!--
+      - custom css link
+    -->
+    <!--  <link rel="stylesheet" href="./assets/css/style.css">-->
+    <link rel="stylesheet" href="../static/css/style.css"/>
+
+
+    <!--
+      - google font link
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body id="top">
+    <main>
+        <header class="header" data-header>
+        <div class="container">
+
+          <div class="overlay" data-overlay></div>
+
+          <a href="/" class="logo">
+            <img src="../static/images/logo-unique.png" alt="unique logo">
+          </a>
+
+          <div class="header-actions">
+
+            <div class="search-container">
+                <form action="/search">
+                  <input type="text" placeholder="Search movies" name="query">
+                  <button type="submit">Search</button>
+                </form>
+            </div>
+
+            <div class="lang-wrapper">
+              <label for="language">
+                <ion-icon name="globe-outline"></ion-icon>
+              </label>
+
+              <select name="language" id="language">
+                <option value="en">EN</option>
+                <option value="cz">CZ</option>
+              </select>
+            </div>
+
+<!--            <button class="btn btn-primary">Sign in</button>-->
+
+          </div>
+
+          <button class="menu-open-btn" data-menu-open-btn>
+            <ion-icon name="reorder-two"></ion-icon>
+          </button>
+
+          <nav class="navbar" data-navbar>
+
+            <div class="navbar-top">
+
+              <a href="/" class="logo">
+                <img src="../static/images/logo-unique.png" alt="unique logo">
+              </a>
+
+              <button class="menu-close-btn" data-menu-close-btn>
+                <ion-icon name="close-outline"></ion-icon>
+              </button>
+
+            </div>
+
+            <ul class="navbar-list">
+
+              <li>
+                <a href="/" class="navbar-link">Home</a>
+              </li>
+
+              <li>
+                <a href="/filter" class="navbar-link">Filter Search page</a>
+              </li>
+
+            </ul>
+
+            <ul class="navbar-social-list">
+
+              <li>
+                <a href="#" class="navbar-social-link">
+                  <ion-icon name="logo-twitter"></ion-icon>
+                </a>
+              </li>
+
+              <li>
+                <a href="#" class="navbar-social-link">
+                  <ion-icon name="logo-facebook"></ion-icon>
+                </a>
+              </li>
+
+              <li>
+                <a href="#" class="navbar-social-link">
+                  <ion-icon name="logo-pinterest"></ion-icon>
+                </a>
+              </li>
+
+              <li>
+                <a href="#" class="navbar-social-link">
+                  <ion-icon name="logo-instagram"></ion-icon>
+                </a>
+              </li>
+
+              <li>
+                <a href="#" class="navbar-social-link">
+                  <ion-icon name="logo-youtube"></ion-icon>
+                </a>
+              </li>
+
+            </ul>
+
+          </nav>
+
+        </div>
+      </header>
+
+        <article>
+            <section class="top-rated" id="attachOnClick">
+              <div class="container">
+                <h2 class="h2 section-title">Filter Search</h2>
+
+                <div class="filter-form">
+                  <form action="/filter" method="post">
+                    <label for="sort">Sort By</label>
+                    <select id="sort" name="sort">
+                      <option value="top">Top</option>
+                    </select>
+
+                    <label for="genres">Genres</label>
+                    <select id="genres" name="genres">
+                      {% for s_genre in genre_list %}
+                        <option value="{{ s_genre }}">{{ s_genre }}</option>
+                      {% endfor %}
+                    </select>
+
+                    <label for="limit">Records Limit</label>
+                    <input class="filter-form" type="number" id="limit" name="limit" value="20" >
+
+                    <input type="submit" value="Filter">
+                  </form>
+                </div>
+<!--                Filter result start here-->
+                {% if heading %}
+                <br>
+                <h2 class="h2 section-title">{{heading}}</h2>
+
+                    <ul class="movies-list">
+                        <!--            # Start-->
+                        {% for id, data  in filter_movies : %}
+<!--                        title, genre, avg_rat, rat_cont-->
+                        <li>
+                            <div class="movie-card">
+
+                                <div class="title-wrapper">
+                                    <a href="#">
+                                        <h3 class="card-title">{{data[1]}}</h3>
+                                    </a>
+
+                                </div>
+
+                                <div class="card-meta">
+                                    <div class="badge badge-outline">{{id}}</div>
+                                    <div class="duration">
+                                    <ion-icon name="star"></ion-icon>
+
+                                    <data>{{"%.1f"|format(data[0])}}</data>
+                                    </div>
+                                    <div class="rating">
+
+                                    <data>Count: {{data[3]}}</data>
+                                    </div>
+
+                                </div>
+
+                                {% if data[2].split('|') |length >3 %}
+                                {% for genre_len in range(0, data[2].split('|') |length, 3) %}
+                                <div class="random">{{'|'.join(data[2].split('|')[genre_len:genre_len+3])}}</div>
+                                {% endfor %}
+                                {% else %}
+                                <div class="random">{{data[2]}}</div>
+                                {% endif %}
+
+                            </div>
+                        </li>
+                        <!--            # End-->
+                        {%endfor%}
+
+                    </ul>
+
+
+
+                {% endif %}
+              </div>
+
+            </section>
+        </article>
+
+    </main>
+  <!--
+    - custom js link
+  -->
+  <script src="../static/js/script.js"></script>
+
+  <!--
+    - ionicon link
+  -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

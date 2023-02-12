@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movies Recommendation System</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../static/favicon.svg" type="image/svg+xml">
+
+    <link rel="stylesheet" href="../static/css/style.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body id="top">
+    <main>
+        <header class="header" data-header>
+        <div class="container">
+
+          <div class="overlay" data-overlay></div>
+
+          <a href="/" class="logo">
+            <img src="../static/images/logo-unique.png" alt="unique logo">
+          </a>
+          <div class="header-actions">
+            <div class="search-container">
+                <form action="/search">
+                  <input type="text" placeholder="Search movies" name="query">
+                  <button type="submit">Search</button>
+                </form>
+            </div>
+
+            <div class="lang-wrapper">
+              <label for="language">
+                <ion-icon name="globe-outline"></ion-icon>
+              </label>
+
+              <select name="language" id="language">
+                <option value="en">EN</option>
+                <option value="cz">CZ</option>
+              </select>
+            </div>
+
+          </div>
+
+          <button class="menu-open-btn" data-menu-open-btn>
+            <ion-icon name="reorder-two"></ion-icon>
+          </button>
+
+          <nav class="navbar" data-navbar>
+
+            <div class="navbar-top">
+
+              <a href="/" class="logo">
+                <img src="../static/images/logo-unique.png" alt="unique logo">
+              </a>
+
+              <button class="menu-close-btn" data-menu-close-btn>
+                <ion-icon name="close-outline"></ion-icon>
+              </button>
+
+            </div>
+
+            <ul class="navbar-list">
+
+              <li>
+                <a href="/" class="navbar-link">Home</a>
+              </li>
+
+              <li>
+                <a href="/filter" class="navbar-link">Filter Search page</a>
+              </li>
+
+            </ul>
+
+            <ul class="navbar-social-list">
+
+              <li>
+                <a href="#" class="navbar-social-link">
+                  <ion-icon name="logo-twitter"></ion-icon>
+                </a>
+              </li>
+
+              <li>
+                <a href="#" class="navbar-social-link">
+                  <ion-icon name="logo-facebook"></ion-icon>
+                </a>
+              </li>
+
+              <li>
+                <a href="#" class="navbar-social-link">
+                  <ion-icon name="logo-pinterest"></ion-icon>
+                </a>
+              </li>
+
+              <li>
+                <a href="#" class="navbar-social-link">
+                  <ion-icon name="logo-instagram"></ion-icon>
+                </a>
+              </li>
+
+              <li>
+                <a href="#" class="navbar-social-link">
+                  <ion-icon name="logo-youtube"></ion-icon>
+                </a>
+              </li>
+
+            </ul>
+
+          </nav>
+
+        </div>
+      </header>
+
+        <article>
+
+            <!--
+              - #HERO
+            -->
+
+            <section class="hero">
+                <div class="container">
+
+                    <div class="hero-content">
+
+                        <p class="hero-subtitle">MAID-ADSA</p>
+
+                        <h1 class="h1 hero-title">
+                            Semester Project <strong>Movie-25M</strong>
+                        </h1>
+                        <button class="btn btn-primary" onclick="window.location.href='#attachOnClick'">
+                            <!--                        <ion-icon name="play"></ion-icon>-->
+
+                            <span>Watch All List</span>
+                        </button>
+
+                    </div>
+
+                </div>
+            </section>
+
+
+
+            <section class="top-rated" id="attachOnClick">
+                <div class="container">
+
+                    <h2 class="h2 section-title">All Movies</h2>
+
+                    <ul class="filter-list">
+
+                        <li>
+                            <a href="/filter"><button class="filter-btn">Apply Filter</button></a>
+                        </li>
+
+                    </ul>
+                    <!--            # I'm interested in this part first to view all movies-->
+                    {% if scroll %}
+                        <script>
+    <!--                        document.getElementById('attachOnClick').scrollIntoView();-->
+                            document.location.hash = '#attachOnClick';
+                        </script>
+                    {% endif %}
+                    <h2 class="page-h2" >(Page {{ pagination.page }})</h2>
+
+                    <ul class="movies-list">
+                        <!--            # Start-->
+                        {% for s_movie in pagination.items%}
+                        <li>
+                            <div class="movie-card">
+
+    <!--                            <a href="#">-->
+    <!--                                <figure class="card-banner">-->
+    <!--                                    <img src="../static/images/unique-poster.png" alt="unique movie poster">-->
+    <!--                                </figure>-->
+    <!--                            </a>-->
+
+                                <div class="title-wrapper">
+                                    <a href="#">
+                                        <h3 class="card-title">{{s_movie.movies_tbl.title}}</h3>
+                                    </a>
+
+                                </div>
+
+                                <div class="card-meta">
+                                    <div class="badge badge-outline">{{s_movie.movies_tbl.id}}</div>
+
+                                </div>
+
+                                {% if s_movie.genres_list.split('|') |length >3 %}
+                                {% for genre_len in range(0, s_movie.genres_list.split('|') |length, 3) %}
+                                <div class="random">{{'|'.join(s_movie.genres_list.split('|')[genre_len:genre_len+3])}}</div>
+                                {% endfor %}
+                                {% else %}
+                                <div class="random">{{s_movie.genres_list}}</div>
+                                {% endif %}
+
+
+                            </div>
+                        </li>
+                        <!--            # End-->
+                        {%endfor%}
+
+                    </ul>
+
+                    <div class="pagination" >
+                        {% if pagination.has_prev %}
+                            <div class="custom-pstyle">
+                                <a class='page-number' href="{{ url_for('home', page=pagination.prev_num) }}" >
+                                        {{ '<<<' }}
+                                </a>
+                            </div>
+                        {% endif %}
+
+                        {% for number in pagination.iter_pages() %}
+                            {% if number == None %}
+                                <div class="custom-pstyle">
+                                    <a class='page-number' >
+                                        ....
+                                    </a>
+                                </div>
+                            {% else %}
+                                {% if pagination.page != number %}
+                                    <div class="custom-pstyle">
+                                        <a class='page-number' href="{{ url_for('home', page=number) }}" >
+                                            {{ number }}
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class='current-page-number custom-pstyle' >{{ number }}</div>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if pagination.has_next %}
+                            <div  class="custom-pstyle">
+                                <a class='page-number' href="{{ url_for('home', page=pagination.next_num) }}" >
+                                    {{ '>>>' }}
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </section>
+        </article>
+
+    </main>
+  <script src="../static/js/script.js"></script>
+
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
